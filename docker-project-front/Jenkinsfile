@@ -1,0 +1,15 @@
+node { 
+    stage('Clone repository') { 
+        git credentialsId: 'github-access', url: 'https://github.com/si-naeng/rolling-paper2.git' 
+    }
+ 
+    stage('Build image') { 
+        dockerImage = docker.build("sinaeng/node-front:1.0", "-f docker-project-front/Dockerfile docker-project-front") 
+    }
+ 
+    stage('Push image') { 
+        withDockerRegistry([credentialsId: "docker-access", url: ""]) { 
+            dockerImage.push() 
+        } 
+    } 
+}
